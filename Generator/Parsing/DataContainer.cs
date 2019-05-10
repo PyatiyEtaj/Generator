@@ -12,6 +12,16 @@ namespace Generator
             Name = name;
             Data = data;
         }
+
+        public override string ToString()
+        {
+            string res = $"name = {Name}\nDATA:\n";
+            foreach(var s in Data)
+            {
+                res += $"\t{s}\n";
+            }
+            return res;
+        }
         
     }
 }

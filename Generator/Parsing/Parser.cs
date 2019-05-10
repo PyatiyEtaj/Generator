@@ -43,12 +43,14 @@ namespace Generator
                 Regex r = new Regex(@"----*\n");
                 text = r.Replace(text, "---");
                 var splitedText = text.Split("---");
-                foreach (string s in splitedText)
+                foreach (string str in splitedText)
                 {
+                    var s = str.Trim(' ', '\n', '\r');
                     if (s.Length == 0) continue;
                     var pos = s.IndexOf('\n'); 
                     var head = s.Substring(0, pos);
                     var body = s.Remove(0, pos);
+                    Console.WriteLine(body);
                     Parse(head, body);
                 }
     
@@ -59,8 +61,11 @@ namespace Generator
             }
             catch (Exception)
             {
-                throw new Exception($"Файла с именем {fileName} не существует!");
+                //throw new Exception($"Файла с именем {fileName} не существует!");
+                throw;
             }
+
+
             return GenData;
         }
         

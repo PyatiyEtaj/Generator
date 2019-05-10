@@ -27,15 +27,19 @@ namespace Generator
         }
         
         static void Main(string[] args)
-        {
+        {    
             if (args.Length < 4)
             {
-                Console.WriteLine("Должно быть 3 аргумента {имя входного файла-шаблона} {имя выходного файла с заданием} {имя выходного файла с кодом} {имя выходного файла с тестовыми данными}");
+                Console.WriteLine("Должно быть 3 аргумента {имя входного файла-шаблона} " +
+                    "{имя выходного файла с заданием} {имя выходного файла с кодом} " +
+                    "{имя выходного файла с тестовыми данными}");
+                Console.ReadKey();
                 return;
-            }
+            }            
 
             try
             {
+                //string[] arg = { @"C:\Users\kampukter\source\repos\Generator\Generator\bin\Debug\netcoreapp2.1\Exp.txt", "1.txt", "2.txt", "3.txt" };
                 Gen g = new Gen();
                 g.Run(args[0]);
     
@@ -62,25 +66,14 @@ namespace Generator
             }
             catch (Exception e)
             {
-                Console.WriteLine("Входной файл-шаблон содержит ошибки! Завершение работы...");
-                using (StreamWriter sw = new StreamWriter("ERROR", false, Encoding.UTF8))
+                Console.WriteLine("Что-то пошло не так, возможно файл-шаблон содержит ошибки! Завершение работы...");
+                using (StreamWriter sw = new StreamWriter("ERROR.txt", false, Encoding.UTF8))
                 {
                     sw.WriteLine(e);
                 }
             }
-            /*
 
-            Gen g = new Gen();
-            g.Run("doc");
-            Console.WriteLine();
-            Console.WriteLine(g.Template);
-            Console.WriteLine("---------------");
-            Console.WriteLine(g.Code);
-            Console.WriteLine("---------------");
-            foreach (var t in g.Tests)
-            {
-                Console.WriteLine(t.First + " : " + t.Second);
-            }*/
+            Console.ReadKey();
         }
     }
 }

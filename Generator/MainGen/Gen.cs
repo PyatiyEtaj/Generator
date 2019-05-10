@@ -1,68 +1,43 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Globalization;
-using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace Generator
 {
     public class Gen
     {
         private Parser _pr = new Parser();
-        private ArithmExpr _arithmExpr = new ArithmExpr();
         private Random _random = new Random();
         private List<Pair<string, string>> _generated;
-        
+        private GenFunctions _genFunctions = new GenFunctions();
+
+
         public string Template { get; set; }
         public string Code { get; set; }
         public  List<Pair<string, string>>  Tests{ get; set; }
 
-        private string[] GetArgs(string str)
-        {
-            int pos = str.IndexOf('(')+1;
-            str = str.Substring(pos, str.IndexOf(')') - pos);
-            var args = str.Split('|');
-            if (_generated == null) return args;
-            
-            for(int i = 0; i < args.Length; i++)
-            {
-                args[i] = args[i].Trim(' ', '\n', '\r');
-                foreach (var elem in _generated)
-                {
-                    if (args[i].Contains(elem.First))
-                    {
-                        args[i] = elem.Second;
-                    }
-                }
-            }
-            return args;
-        }
-        
+        // Выполнение необходимой функции (указаны в файле GenFunctions)
         private string CheckF(string str)
         {
-            if (str.Contains(GenFunctions.Funcs[(int) GenFunctions.FuncName.Rnd]))
+            if (str.Contains(GenFunctions.FuncName.Rnd.Value))
             {
-                var args = GetArgs(str);
-                string count;
+                var args = _genFunctions.GetArgs(str, _generated);
+
                 if (args.Length < 4)
                 {
-                    str = GenFunctions.Rnd(args[0], args[1], args[2], _random);
+                    str = _genFunctions.Rnd(args[0], args[1], args[2], _random);
                 }
                 else
                 {
-                    str = GenFunctions.Rnd(args[0], args[1], args[2], _random,args[3]);
+                    str = _genFunctions.Rnd(args[0], args[1], args[2], _random,args[3]);
                 }
             }
-            else if (str.Contains(GenFunctions.Funcs[(int) GenFunctions.FuncName.GenAE]))
+            else if (str.Contains(GenFunctions.FuncName.GenAE.Value))
             {
-                var args = GetArgs(str);
-                _arithmExpr.Run(Int32.Parse(args[0]));
-                str = _arithmExpr.Expression;
+                str = _genFunctions.Expression(str, _generated);
             }
-            else if (str.Contains(GenFunctions.Funcs[(int) GenFunctions.FuncName.GetAECode]))
+            else if (str.Contains(GenFunctions.FuncName.GetAECode.Value))
             {
-                str = _arithmExpr.CodeOnC;
+                str = _genFunctions.ExpressionCodeOnC();
             }
             return str;
         }
@@ -79,7 +54,7 @@ namespace Generator
         }
         
         public void Run(string fileName)
-        {
+        {            
             var d = _pr.Read(fileName);
             if (d == null) return;
 

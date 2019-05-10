@@ -4,14 +4,6 @@ namespace Generator
 {
     class Elems
     {
-        /*public enum FuncName
-        {
-            Sin, Cos, Sqrt, Tg, Log, Ln
-        }
-        public enum SignName
-        {
-            Sub, Add, Div, Mul, Deg
-        }*/
         public static string[] Funcs = {"sin", "cos", "sqrt", "tg", "log", "ln" };
         public static string[] Signs = {"-", "+", "/", "*", "^" };
 
