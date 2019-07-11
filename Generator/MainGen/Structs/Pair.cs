@@ -1,4 +1,4 @@
-namespace Generator
+namespace Generator.MainGen.Structs
 {
     public sealed class Pair<T1, T2>
     {

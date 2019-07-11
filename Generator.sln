@@ -1,6 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Generator", "Generator\Generator.csproj", "{B9DBADA2-7CB3-4D74-B1B7-2FF0F4EB87CD}"
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.572
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Generator", "Generator\Generator.csproj", "{B9DBADA2-7CB3-4D74-B1B7-2FF0F4EB87CD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ALS.CheckModule", "..\ALS\ALS.CheckModule\ALS.CheckModule.csproj", "{6681EA7B-4148-4DA7-8977-2A18A4E17A48}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,5 +17,15 @@ Global
 		{B9DBADA2-7CB3-4D74-B1B7-2FF0F4EB87CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9DBADA2-7CB3-4D74-B1B7-2FF0F4EB87CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B9DBADA2-7CB3-4D74-B1B7-2FF0F4EB87CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6681EA7B-4148-4DA7-8977-2A18A4E17A48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6681EA7B-4148-4DA7-8977-2A18A4E17A48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6681EA7B-4148-4DA7-8977-2A18A4E17A48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6681EA7B-4148-4DA7-8977-2A18A4E17A48}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B8CECAD1-18F4-437F-9EA9-7BE4484E7724}
 	EndGlobalSection
 EndGlobal

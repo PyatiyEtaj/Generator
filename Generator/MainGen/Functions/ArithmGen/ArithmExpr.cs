@@ -124,7 +124,7 @@ namespace Generator
                 {
                     _condition += $"({arg} > 0) && ";
                 }
-                if (condEl == "log" || condEl == "ln")
+                if (condEl == "log" || condEl == "ln" || condEl == "log10")
                 {
                     _condition += $"({arg} > 0 && {arg} != 1) && ";
                 }

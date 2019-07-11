@@ -1,6 +1,6 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace Generator
+namespace Generator.Parsing
 {
     public class GenData
     {

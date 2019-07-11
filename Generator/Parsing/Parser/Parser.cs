@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 
-namespace Generator
+namespace Generator.Parsing
 {
-    class Parser
+    class Parser : IParser
     {
         /*названия блоков*/
-        private const string _storage = "ХРАНИЛИЩЕ_ОБЪЕКТОВ";
+        private const string _storage  = "ХРАНИЛИЩЕ_ОБЪЕКТОВ";
         private const string _template = "ШАБЛОННЫЙ_ВИД";
         private const string _solution = "РЕШЕНИЕ";
         private const string _service  = "СЛУЖЕБНОЕ";
@@ -50,7 +50,6 @@ namespace Generator
                     var pos = s.IndexOf('\n'); 
                     var head = s.Substring(0, pos);
                     var body = s.Remove(0, pos);
-                    Console.WriteLine(body);
                     Parse(head, body);
                 }
     
@@ -59,12 +58,10 @@ namespace Generator
                     GenData = new GenData(_storageData, _templateStr, _code, _testData);   
                 }
             }
-            catch (Exception)
+            catch (Exception e )
             {
-                //throw new Exception($"Файла с именем {fileName} не существует!");
-                throw;
+                throw new Exception ("Error during parsing!");
             }
-
 
             return GenData;
         }

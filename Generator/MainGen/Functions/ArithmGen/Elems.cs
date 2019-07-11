@@ -4,7 +4,7 @@ namespace Generator
 {
     class Elems
     {
-        public static string[] Funcs = {"sin", "cos", "sqrt", "tg", "log", "ln" };
+        public static string[] Funcs = {"sin", "cos", "sqrt", "tg", "log", "ln", "log10" };
         public static string[] Signs = {"-", "+", "/", "*", "^" };
 
         public static void SetFuncs(List<string> funcs)

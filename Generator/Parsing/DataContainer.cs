@@ -1,6 +1,6 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace Generator
+namespace Generator.Parsing
 {
     public class DataContainer
     {
@@ -15,7 +15,7 @@ namespace Generator
 
         public override string ToString()
         {
-            string res = $"name = {Name}\nDATA:\n";
+            string res = $"name = {Name}\nDATA = ";
             foreach(var s in Data)
             {
                 res += $"\t{s}\n";
