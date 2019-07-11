@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using Generator.MainGen;
 using Generator.MainGen.Parametr;
 using Generator.Parsing;
@@ -16,7 +17,7 @@ namespace Generator
             var path = @"C:\Users\kampukter\source\repos\\Generator\Generator\Docs\Exp.txt";
             //Console.WriteLine(new System.Uri(path).AbsoluteUri);
             Console.WriteLine(@"file:///C:/Users/kampukter/source/repos/ALS/ALS.GeneratorModule/Docs/Exp.txt");
-
+            //for (int i = 0; i < 100000; i++)
             try
             {
                 //string[] arg = { @"C:\Users\kampukter\source\repos\Generator\Generator\bin\Debug\netcoreapp2.1\Exp.txt", "1.txt", "2.txt", "3.txt" };
@@ -27,7 +28,7 @@ namespace Generator
                 Console.WriteLine(result.Result.Code);
                 Console.WriteLine(result.Result.Template + "\n");
                 Console.WriteLine(result.Result.Tests + "\n");
-                Console.WriteLine();/*
+                Console.WriteLine();
                 var t = gf.GetTestsFromJson(result.Result.Tests);
                 foreach(var ls in t)
                 {
@@ -42,7 +43,7 @@ namespace Generator
                 if (System.IO.File.Exists(new Uri(result.Result.Code).AbsolutePath))
                 {
                     Console.WriteLine("NICE");
-                }*/
+                }
             }
             catch (Exception e)
             {

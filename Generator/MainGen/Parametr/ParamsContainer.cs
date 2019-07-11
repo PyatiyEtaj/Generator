@@ -15,7 +15,6 @@ namespace Generator.MainGen.Parametr
         public async Task<List<Param>> GenNewParametrs(List<DataContainer> d)
         {
             Parametrs.Clear();
-
             foreach (var sd in d)
             {
                 bool flag = false;

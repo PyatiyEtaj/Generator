@@ -31,8 +31,11 @@ namespace Generator.Parsing
         
         public GenData Read(string fileName)
         {
+            //_storageData.Clear();
+            //_testData.Clear();
             _code = "";
             _templateStr = "";
+            string lines = "----";
             try
             {
                 string text;
@@ -40,9 +43,9 @@ namespace Generator.Parsing
                 {
                     text = s.ReadToEnd();
                 }
-                Regex r = new Regex(@"----*\n");
-                text = r.Replace(text, "---");
-                var splitedText = text.Split("---");
+                Regex r = new Regex($"{lines}(\\W*)\n");
+                text = r.Replace(text, lines);
+                var splitedText = text.Split(lines);
                 foreach (string str in splitedText)
                 {
                     var s = str.Trim(' ', '\n', '\r');
@@ -58,7 +61,7 @@ namespace Generator.Parsing
                     GenData = new GenData(_storageData, _templateStr, _code, _testData);   
                 }
             }
-            catch (Exception e )
+            catch (Exception)
             {
                 throw new Exception ("Error during parsing!");
             }

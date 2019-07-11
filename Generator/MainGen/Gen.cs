@@ -94,23 +94,22 @@ namespace Generator.MainGen
             }
             
             string lrPath = ProcessCompiler.CreatePath(lr, var);
-            /*
+            
             using (StreamWriter sw = new StreamWriter(Path.Combine("sourceCodeModel",$"{lrPath}.cpp"), false, Encoding.UTF8))
             {
                 await sw.WriteLineAsync(d.Code);
             }
-
+            
             // тупа компиляция
             if (!await Compile(lr, var))
             {
                 throw new Exception("Ошибка во время компиляции!");
-            }        
-            */
+            }
 
             return new ResultData() {
                 Template = d.Template, /* шаблон задания */
-                //Code = new System.Uri(Path.Combine(Environment.CurrentDirectory, "executeModel", $"{lrPath}.exe")).AbsoluteUri, /* путь до бинарника */
-                Code = d.Code,
+                Code = new System.Uri(Path.Combine(Environment.CurrentDirectory, "executeModel", $"{lrPath}.exe")).AbsoluteUri, /* путь до бинарника */
+                //Code = d.Code,
                 Tests = JsonConvert.SerializeObject(d.TestsD) /* тестовые данные */
             };
         }
