@@ -7,7 +7,6 @@ namespace Generator.MainGen.Parametr
     public class Param
     {
         //public Param Parent { get; set; } = null;
-
         //public bool AreParentsFound { get; set; } = false;
         public string Value { get; set; }
         public string Name { get; set; }
