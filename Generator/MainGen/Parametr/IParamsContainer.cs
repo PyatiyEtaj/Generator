@@ -6,6 +6,6 @@ namespace Generator.MainGen.Parametr
 {
     public interface IParamsContainer
     {
-        Task<List<Param>> GenNewParametrs(List<DataContainer> d);
+        List<Param> GenNewParametrs(List<DataContainer> d);
     }
 }

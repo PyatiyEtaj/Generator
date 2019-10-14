@@ -7,6 +7,7 @@ namespace Generator.MainGen
         genAE,
         getAEcode,
         parent,
+        lua,
         justString
     }
 }

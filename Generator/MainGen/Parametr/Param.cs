@@ -20,25 +20,41 @@ namespace Generator.MainGen.Parametr
             Position = pos;
             Name = name;
         }
-        
-        public FuncsEnum WhatIsIt()
-        {
-            FuncsEnum type = FuncsEnum.justString;
 
-            if (RawData.Contains($"#{FuncsEnum.rnd}"))
+        public string GetFuncName(string str)
+        {
+            int p = str.IndexOf('(');
+            if (p < 0) return "NULL";
+            return str.Substring(0, p);
+        }
+
+        public FuncsEnum CheckParamType(string str)
+        {
+            string tmp = GetFuncName(str);
+            FuncsEnum type = FuncsEnum.justString;
+            if (tmp.Contains($"#{FuncsEnum.rnd}"))
             {
                 type = FuncsEnum.rnd;
             }
-            else if (RawData.Contains($"#{FuncsEnum.genAE}"))
+            else if (tmp.Contains($"#{FuncsEnum.genAE}"))
             {
                 type = FuncsEnum.genAE;
             }
-            else if (RawData.Contains($"#{FuncsEnum.getAEcode}"))
+            else if (tmp.Contains($"#{FuncsEnum.getAEcode}"))
             {
                 type = FuncsEnum.getAEcode;
             }
+            else if (tmp.Contains($"#{FuncsEnum.lua}"))
+            {
+                type = FuncsEnum.lua;
+            }
 
             return type;
+        }
+
+        public FuncsEnum WhatIsIt()
+        {
+            return CheckParamType(RawData);
         }
 
         public FuncsEnum FindParent()
