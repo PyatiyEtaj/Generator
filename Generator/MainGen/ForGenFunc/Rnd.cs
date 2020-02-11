@@ -8,7 +8,7 @@ namespace Generator.MainGen.ForGenFunc
     public class Rnd : AFunc
     {
         private Random _random = new Random();
-        
+        private string _rawstr = string.Empty;
         private string GenValue(string a, string b, string type, Random r, string count = "1")
         {
             string str;
@@ -27,7 +27,7 @@ namespace Generator.MainGen.ForGenFunc
             }
             catch (Exception e)
             {
-                throw new Exception($"func #{FuncsEnum.rnd} cannot convert values, maybe it has wrong format | error = {e}");
+                throw new Exception($"\nError in str = {_rawstr}\nFunc #{FuncsEnum.rnd} cannot convert values, maybe it has wrong format | error = {e.Message}");
             }
 
             return str;
@@ -35,6 +35,7 @@ namespace Generator.MainGen.ForGenFunc
 
         public override string Run(Param param, List<Param> parametrs = null)
         {
+            _rawstr = param.RawData;
             var args = GetArgs(param.RawData, parametrs);
 
             if (args.Length != 3 && args.Length != 4) throw new Exception($"Func #{FuncsEnum.rnd} take 3(4) parametrs (min | max| type (| count) )");

@@ -125,24 +125,22 @@ namespace Generator.Parsing
                 s[i] = super;
         }
         
-        public string[] GetSeparatedStr(string str)
+        public string[] GetSeparatedValuesOfObjParam(string str, char separator, char super)
         {
-            const char separator = ',';
-            const char super = '■';
+            //const char separator = ',';
+            //const char super = '■';
             StringBuilder s = new StringBuilder(str);
 
             for (int i = 0; i < s.Length; i++)
             {
-                switch (s[i])
+                if (s[i] == separator)
                 {
-                    case separator:
-                        HandleOfSymbol(s, i, super);
-                        break;
-
-                    case '\"':
-                        i = FindStringEnd(s, i);
-                        if (i < 0) throw new Exception($"Cannot find end of string pos in text {s.ToString()}");
-                        break;                    
+                    HandleOfSymbol(s, i, super);
+                }
+                else if (s[i] == '\"')
+                {
+                    i = FindStringEnd(s, i);
+                    if (i < 0) throw new Exception($"Cannot find end of string pos in text: {s.ToString()}");
                 }
             }
 
@@ -154,7 +152,7 @@ namespace Generator.Parsing
             const char separator = '|';
             const char super = '■';
             int i_start = str.IndexOf('(') + 1;
-            if (i_start < 0) throw new Exception($"Cannot find end of func in text {str}");
+            if (i_start < 0) throw new Exception($"Cannot find end of func in text: {str}");
             StringBuilder s = new StringBuilder(str.Substring(i_start));
             int counter = 1;
 
@@ -175,7 +173,7 @@ namespace Generator.Parsing
                         break;
                     case '\"':
                         i = FindStringEnd(s, i);
-                        if (i < 0) throw new Exception($"Cannot find end of string pos in text {str}");
+                        if (i < 0) throw new Exception($"Cannot find end of string pos in text: {str}");
                         break;
                     case separator:
                         if (counter == 1)
@@ -186,15 +184,15 @@ namespace Generator.Parsing
                 }
             }
 
-            if (counter > 0) throw new Exception($"Cannot find end of func in text {str}");
+            if (counter > 0) throw new Exception($"Cannot find end of func in text: {str}");
 
             return s.ToString().Split(super, StringSplitOptions.RemoveEmptyEntries);
         }
-
+        
         private List<DataContainer> GetDCFromBody(string body)
         {
             List<DataContainer> sd = new List<DataContainer>();
-            var lines = body.Split(";");
+            var lines = GetSeparatedValuesOfObjParam(body, ';', '■');
             
             foreach (string v in lines)
             {
@@ -202,7 +200,7 @@ namespace Generator.Parsing
 
                 var parts = v.Split(':', 2);
                 if (parts.Length < 2) continue;
-                var rightPart = GetSeparatedStr(parts[1]);
+                var rightPart = GetSeparatedValuesOfObjParam(parts[1], ',', '■');
                 foreach (var s in rightPart)
                 {
                     if (s.Length == 0) continue;

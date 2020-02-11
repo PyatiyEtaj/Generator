@@ -48,6 +48,10 @@ namespace Generator.MainGen.Parametr
             {
                 type = FuncsEnum.lua;
             }
+            else if (tmp.Contains($"#{FuncsEnum.parent}"))
+            {
+                type = FuncsEnum.parent;
+            }
 
             return type;
         }
@@ -57,7 +61,7 @@ namespace Generator.MainGen.Parametr
             return CheckParamType(RawData);
         }
 
-        public FuncsEnum FindParent()
+        /*public FuncsEnum FindParent()
         {
             if (RawData.Contains($"#{FuncsEnum.parent}"))
             {
@@ -65,6 +69,6 @@ namespace Generator.MainGen.Parametr
             }
 
             return FuncsEnum.justString;
-        }
+        }*/
     }
 }

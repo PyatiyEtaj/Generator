@@ -61,15 +61,19 @@ namespace Generator.MainGen
             {
                 throw new Exception("Тестовые данные содержат ошибку!");
             }
-            string lrPath = string.Empty;
+            string lrPath = ProcessCompiler.CreatePath(lr, var);
+            using (StreamWriter sw = new StreamWriter(Path.Combine("sourceCodeModel", $"{lrPath}.cpp"), false, Encoding.UTF8))
+            {
+                await sw.WriteLineAsync(d.Code);
+            }
             if (needCompile)
             {
                 lrPath = ProcessCompiler.CreatePath(lr, var);
 
-                using (StreamWriter sw = new StreamWriter(Path.Combine("sourceCodeModel", $"{lrPath}.cpp"), false, Encoding.UTF8))
+                /*using (StreamWriter sw = new StreamWriter(Path.Combine("sourceCodeModel", $"{lrPath}.cpp"), false, Encoding.UTF8))
                 {
                     await sw.WriteLineAsync(d.Code);
-                }
+                }*/
 
                 // тупа компиляция
                 if (!await Compile(lr, var))

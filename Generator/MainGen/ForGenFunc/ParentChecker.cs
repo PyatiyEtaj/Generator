@@ -22,7 +22,13 @@ namespace Generator.MainGen.ForGenFunc
             var args = GetArgs(param.RawData, parametrs);
             if (args.Length < 2) throw new Exception($"func #{FuncsEnum.parent} takes 2+ parametrs (value | nameOfParent| posOfParam(| posOfParam...))");
             param.RawData = param.Value = args[0];
-            StringBuilder code = new StringBuilder($"return {args[1]}");
+            StringBuilder str = new StringBuilder(args[1]);
+            if (str[0] == str[str.Length - 1] && str[0] == '\"')
+            {
+                str[0] = ' ';
+                str[str.Length-1] = ' ';
+            }
+            StringBuilder code = new StringBuilder($"return {str.ToString()}");
             if (args.Length > 2)
             {
                 for (int i = 2; i < args.Length; i++)
@@ -37,11 +43,15 @@ namespace Generator.MainGen.ForGenFunc
                     }
                 }
             }
-
+                        
             bool res = false;
             try
             {
-                res = (bool)_lua.DoString(code.ToString())[0];
+                var o = _lua.DoString(code.ToString())[0];
+                if (o != null)
+                {
+                    res = (bool)o;
+                }
             }
             catch (Exception ex)
             {

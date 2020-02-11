@@ -15,7 +15,7 @@ namespace Generator
             StringBuilder str = new StringBuilder("");
             for (int i = 0; i < count; i++)
             {
-                str.Append("{NextI(a, b, r)}, ");
+                str.Append($"{NextI(a, b, r)}, ");
             }
             return str.ToString().Remove(str.Length - 2);
         }

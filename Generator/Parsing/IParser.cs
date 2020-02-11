@@ -7,7 +7,7 @@ namespace Generator.Parsing
     public interface IParser
     {
         GenData Read(string fileName);
-        string[] GetSeparatedStr(string str);
+        string[] GetSeparatedValuesOfObjParam(string str, char separator, char super);
         string[] GetSeparatedArgs(string str);
     }
 }

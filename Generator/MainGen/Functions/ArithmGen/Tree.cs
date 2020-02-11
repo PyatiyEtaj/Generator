@@ -15,7 +15,7 @@ namespace Generator
         public State State = State.Var;
         
 
-        public Tree(Tree parent, string value = "x")
+        public Tree(Tree parent, string value = "x1")
         {
             Value = value;
             Parent = parent;

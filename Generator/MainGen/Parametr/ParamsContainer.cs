@@ -1,6 +1,7 @@
 ﻿using Generator.Parsing;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Generator.MainGen.Parametr
@@ -30,7 +31,7 @@ namespace Generator.MainGen.Parametr
                     string rawData = sd.Data[pos];
                     sd.Data.RemoveAt(pos);
                     param = new Param(rawData, map[rawData], sd.Name);
-                    if ( param.FindParent() == FuncsEnum.parent)
+                    if ( param.WhatIsIt() == FuncsEnum.parent)
                     {
                         if (!bool.Parse(Gf.WhatToDoWithParam(FuncsEnum.parent, param, Parametrs))) continue;
                     }
@@ -40,8 +41,10 @@ namespace Generator.MainGen.Parametr
 
                 if (!flag && sd.Data.Count == 0)
                 {
-                    param = new Param($"--< ERROR var({sd.Name}) - cannot gen a value for that variable >--", 0, sd.Name);
+                    //param = new Param($"--< ERROR var({sd.Name}) - cannot gen a value for that variable >--", 0, sd.Name);
+                    param = new Param("", 1, sd.Name);
                 }
+                // здесь добавить чтоб изменял параметры с одинаковыми именами
                 Parametrs.Add(param);
             }
 
