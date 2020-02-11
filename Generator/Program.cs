@@ -26,23 +26,18 @@ namespace Generator
             Console.WriteLine($"время работы: { myStopwatch.ElapsedMilliseconds}");
         }
 
-
         static void Main(string[] args)
         {
-            /*RunTest();
-            Console.ReadLine();
-            return;*/
-
             var path = @"C:\Users\kampukter\source\repos\Generator\Generator\Docs\Exp.txt";
             //for (int i = 0; i < 100000; i++)
             try
             {
-                int lr = 2;
+                int lr = 5;
                 //string[] arg = { @"C:\Users\kampukter\source\repos\Generator\Generator\bin\Debug\netcoreapp2.1\Exp.txt", "1.txt", "2.txt", "3.txt" };
                 string arg = $"tasks/t{lr}.txt";
                 Gen g = new Gen(new Parser(), new ParamsContainer());
                 GenFunctions gf = new GenFunctions();
-                var result = g.Run(arg, lr, 1, true);
+                var result = g.Run(arg, lr, 1, false);
                 //Console.WriteLine(result.Result.Code + "\n----------------------\n");
                 Console.WriteLine(result.Result.Template + "\n----------------------\n");
                 //Console.WriteLine(result.Result.Tests + "\n----------------------\n");

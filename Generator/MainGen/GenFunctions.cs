@@ -42,9 +42,12 @@ namespace Generator.MainGen
                 case FuncsEnum.getAEcode:
                     return ((GenExpr)_f[1]).ExpressionCodeOnC();
 
+                default:
+                    return param.RawData;
+
             }
 
-            return param.RawData;
+            //return param.RawData;
         }
 
         public bool CheckTests(List<DataContainer> lDc)

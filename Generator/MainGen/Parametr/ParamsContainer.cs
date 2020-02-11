@@ -30,7 +30,7 @@ namespace Generator.MainGen.Parametr
                     int pos = r.Next(0, sd.Data.Count);
                     string rawData = sd.Data[pos];
                     sd.Data.RemoveAt(pos);
-                    param = new Param(rawData, map[rawData], sd.Name);
+                    param = new Param(rawData, map[rawData], sd.Name, Parametrs);
                     if ( param.WhatIsIt() == FuncsEnum.parent)
                     {
                         if (!bool.Parse(Gf.WhatToDoWithParam(FuncsEnum.parent, param, Parametrs))) continue;

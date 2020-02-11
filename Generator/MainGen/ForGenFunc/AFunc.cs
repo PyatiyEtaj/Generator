@@ -1,6 +1,6 @@
 ﻿using Generator.MainGen.Parametr;
 using Generator.Parsing;
-using NLua;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace Generator.MainGen.ForGenFunc
@@ -14,7 +14,8 @@ namespace Generator.MainGen.ForGenFunc
             var args = _pr.GetSeparatedArgs(str);
             if (parametrs == null) return args;
 
-            for (int i = 0; i < args.Length; i++)
+            return args.Select(arg => arg.Trim(' ', '\n', '\r')).ToArray();
+            /*for (int i = 0; i < args.Length; i++)
             {
                 args[i] = args[i].Trim(' ', '\n', '\r');
                 foreach (var elem in parametrs)
@@ -25,7 +26,7 @@ namespace Generator.MainGen.ForGenFunc
                     }
                 }
             }
-            return args;
+            return args;*/
         }
 
         public abstract string Run(Param param, List<Param> parametrs = null);

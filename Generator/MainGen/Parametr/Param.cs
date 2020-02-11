@@ -13,8 +13,9 @@ namespace Generator.MainGen.Parametr
         public string RawData { get; set; }
         public int Position { get; set; }
 
-        public Param(string raw, int pos, string name)
+        public Param(string raw, int pos, string name, List<Param> parametrs = null)
         {
+            raw = SubstituteValues(raw, parametrs);
             RawData = raw;
             Value = raw;
             Position = pos;
@@ -30,25 +31,26 @@ namespace Generator.MainGen.Parametr
 
         public FuncsEnum CheckParamType(string str)
         {
-            string tmp = GetFuncName(str);
+            string nameOfFunction = GetFuncName(str);
             FuncsEnum type = FuncsEnum.justString;
-            if (tmp.Contains($"#{FuncsEnum.rnd}"))
+
+            if (nameOfFunction == $"#{FuncsEnum.rnd}")
             {
                 type = FuncsEnum.rnd;
             }
-            else if (tmp.Contains($"#{FuncsEnum.genAE}"))
+            else if (nameOfFunction == $"#{FuncsEnum.genAE}")
             {
                 type = FuncsEnum.genAE;
             }
-            else if (tmp.Contains($"#{FuncsEnum.getAEcode}"))
+            else if (nameOfFunction == $"#{FuncsEnum.getAEcode}")
             {
                 type = FuncsEnum.getAEcode;
             }
-            else if (tmp.Contains($"#{FuncsEnum.lua}"))
+            else if (nameOfFunction == $"#{FuncsEnum.lua}")
             {
                 type = FuncsEnum.lua;
             }
-            else if (tmp.Contains($"#{FuncsEnum.parent}"))
+            else if (nameOfFunction == $"#{FuncsEnum.parent}")
             {
                 type = FuncsEnum.parent;
             }
@@ -59,6 +61,23 @@ namespace Generator.MainGen.Parametr
         public FuncsEnum WhatIsIt()
         {
             return CheckParamType(RawData);
+        }
+
+        private string SubstituteValues(string raw, List<Param> parametrs)
+        {
+            if (parametrs == null) return raw;
+
+            StringBuilder s = new StringBuilder(raw);
+            foreach (var elem in parametrs)
+            {
+                s = s.Replace($"({elem.Name})", elem.Value);
+                /*if (args[i].Contains($"({elem.Name})"))
+                {
+                    args[i] = args[i].Replace($"({elem.Name})", elem.Value);
+                }*/
+            }
+
+            return s.ToString();
         }
 
         /*public FuncsEnum FindParent()
