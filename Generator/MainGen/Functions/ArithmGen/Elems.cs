@@ -10,7 +10,7 @@ namespace Generator
         public static void SetFuncs(List<string> funcs)
         {
             int length = funcs.Count;
-            if (funcs.Count > 0 && funcs[0].Trim(' ') == "0") length = 0;
+            if (funcs.Count > 0 && funcs[0].Trim(' ').Length == 0) length = 0;
             Funcs = new string[length]; 
             for (int i = 0 ; i < length; i++)
             {
@@ -21,7 +21,7 @@ namespace Generator
         public static void SetSigns(List<string> signs)
         {
             int length = signs.Count;
-            if (signs.Count > 0 && signs[0].Trim(' ') == "0") length = 0;
+            if (signs.Count > 0 && signs[0].Trim(' ').Length == 0) length = 0;
             Signs = new string[length]; 
             for (int i = 0 ; i < length; i++)
             {

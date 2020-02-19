@@ -45,7 +45,7 @@ namespace Generator
                 _trees.Add(tree.Left);
                 tree.State = State.Func;
             }
-            else
+            else if (Elems.Signs.Length > 0)
             {
                 int gran = _powismorethenone ? 1 : 0;
                 tree.Value = Elems.Signs[_random.Next(0, Elems.Signs.Length - gran)];

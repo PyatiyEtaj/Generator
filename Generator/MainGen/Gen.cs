@@ -32,7 +32,7 @@ namespace Generator.MainGen
             return await Task.Run (() => pc.Execute(60000));
         }
 
-        public async Task<ResultData> Run(string fileName,int lr = 1, int var = 1, bool needCompile = false)
+        public async Task<ResultData> Run(string fileName,int lr = 1, int var = 1, bool needCompile = false, bool returnRawCode = false)
         {     
             // тупа парсинг
             var d = await Task.Run( () => _pr.Read(fileName));
@@ -43,7 +43,8 @@ namespace Generator.MainGen
 
             foreach (var elem in _parametrs)
             {
-                var pattern = $"({elem.Name})";
+                var pattern = $"@{elem.Name}@";
+                //var pattern = $"({elem.Name})";
                 d.Template = d.Template.Replace(pattern, elem.Value);
                 d.Code = d.Code.Replace(pattern, elem.Value);
                 // кансер шо пипес
@@ -61,15 +62,17 @@ namespace Generator.MainGen
             {
                 throw new Exception("Тестовые данные содержат ошибку!");
             }
+
             string lrPath = ProcessCompiler.CreatePath(lr, var);
-            using (StreamWriter sw = new StreamWriter(Path.Combine("sourceCodeModel", $"{lrPath}.cpp"), false, Encoding.UTF8))
-            {
-                await sw.WriteLineAsync(d.Code);
-            }
+
             if (needCompile)
             {
-                lrPath = ProcessCompiler.CreatePath(lr, var);
-
+                //lrPath = ProcessCompiler.CreatePath(lr, var);
+                //string lrPath = ProcessCompiler.CreatePath(lr, var);
+                using (StreamWriter sw = new StreamWriter(Path.Combine("sourceCodeModel", $"{lrPath}.cpp"), false, Encoding.UTF8))
+                {
+                    await sw.WriteLineAsync(d.Code);
+                }
                 /*using (StreamWriter sw = new StreamWriter(Path.Combine("sourceCodeModel", $"{lrPath}.cpp"), false, Encoding.UTF8))
                 {
                     await sw.WriteLineAsync(d.Code);
@@ -84,7 +87,7 @@ namespace Generator.MainGen
 
             return new ResultData() {
                 Template = d.Template, /* шаблон задания */
-                Code = new System.Uri(Path.Combine(Environment.CurrentDirectory, "executeModel", $"{lrPath}.exe")).AbsoluteUri, /* путь до бинарника */
+                Code = (returnRawCode) ? d.Code : new System.Uri(Path.Combine(Environment.CurrentDirectory, "executeModel", $"{lrPath}.exe")).AbsoluteUri, /* путь до бинарника */
                 //Code = d.Code,
                 Tests = JsonConvert.SerializeObject(d.TestsD) /* тестовые данные */
             };
