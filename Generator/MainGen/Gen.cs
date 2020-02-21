@@ -25,31 +25,41 @@ namespace Generator.MainGen
             _paramsContainer = paramsContainer;
         }
 
-        private async Task<bool> Compile(int lr,int var)
+        private string PathSourceModelCode(string name, string fextension) => Path.Combine("sourceCodeModel", $"{name}.{fextension}");
+        private string PathExecuteModel(string name, string fextension) => Path.Combine("executeModel", $"{name}.{fextension}");
+
+        private string PathToSoulution(string subpath)
         {
-            string lrPath = ProcessCompiler.CreatePath(lr, var);
-            ProcessCompiler pc = new ProcessCompiler(Path.Combine("sourceCodeModel", $"{lrPath}.cpp"), Path.Combine("executeModel", $"{lrPath}.exe"));
-            return await Task.Run (() => pc.Execute(60000));
+            if (!Directory.Exists($"sourceCodeModel\\{subpath}"))
+            {
+                Directory.CreateDirectory($"sourceCodeModel\\{subpath}");
+            }
+
+            return $"sourceCodeModel\\{subpath}";
         }
 
-        public async Task<ResultData> Run(string fileName,int lr = 1, int var = 1, bool needCompile = false, bool returnRawCode = false)
-        {     
-            // тупа парсинг
-            var d = await Task.Run( () => _pr.Read(fileName));
+        private async Task<bool> Compile(int lr, int var)
+        {
+            string name = ProcessCompiler.CreatePath(lr, var);
+            //ProcessCompiler pc = new ProcessCompiler(Path.Combine("sourceCodeModel", $"{lrPath}.cpp"), Path.Combine("executeModel", $"{lrPath}.exe"));
+            ProcessCompiler pc = new ProcessCompiler(PathToSoulution(name), PathExecuteModel(name, "exe"));
+            return await Task.Run(() => pc.Execute(60000));
+        }
+
+        public async Task<ResultData> Run(string fileName, int lr = 1, int var = 1, bool needCompile = false, bool returnRawCode = false)
+        {
+            var d = await Task.Run(() => _pr.Read(fileName));
             if (d == null) return null;
 
-            // тупа генерация
             _parametrs = _paramsContainer.GenNewParametrs(d.Sd);
 
             foreach (var elem in _parametrs)
             {
                 var pattern = $"@{elem.Name}@";
-                //var pattern = $"({elem.Name})";
                 d.Template = d.Template.Replace(pattern, elem.Value);
                 d.Code = d.Code.Replace(pattern, elem.Value);
-                // кансер шо пипес
                 if (d.TestsD == null) continue;
-                for ( int i = 0; i < d.TestsD.Count; i++)
+                for (int i = 0; i < d.TestsD.Count; i++)
                 {
                     for (int j = 0; j < d.TestsD[i].Data.Count; j++)
                     {
@@ -63,32 +73,26 @@ namespace Generator.MainGen
                 throw new Exception("Тестовые данные содержат ошибку!");
             }
 
-            string lrPath = ProcessCompiler.CreatePath(lr, var);
+            string name = ProcessCompiler.CreatePath(lr, var);
+            string pathtocpp = PathToSoulution(name);
 
             if (needCompile)
             {
-                //lrPath = ProcessCompiler.CreatePath(lr, var);
-                //string lrPath = ProcessCompiler.CreatePath(lr, var);
-                using (StreamWriter sw = new StreamWriter(Path.Combine("sourceCodeModel", $"{lrPath}.cpp"), false, Encoding.UTF8))
+                using (StreamWriter sw = new StreamWriter(Path.Combine(pathtocpp, $"{name}.cpp"), false, Encoding.UTF8))
                 {
                     await sw.WriteLineAsync(d.Code);
                 }
-                /*using (StreamWriter sw = new StreamWriter(Path.Combine("sourceCodeModel", $"{lrPath}.cpp"), false, Encoding.UTF8))
-                {
-                    await sw.WriteLineAsync(d.Code);
-                }*/
 
-                // тупа компиляция
                 if (!await Compile(lr, var))
                 {
                     throw new Exception("Ошибка во время компиляции!");
                 }
-            }            
+            }
 
-            return new ResultData() {
+            return new ResultData()
+            {
                 Template = d.Template, /* шаблон задания */
-                Code = (returnRawCode) ? d.Code : new System.Uri(Path.Combine(Environment.CurrentDirectory, "executeModel", $"{lrPath}.exe")).AbsoluteUri, /* путь до бинарника */
-                //Code = d.Code,
+                Code = (returnRawCode) ? d.Code : new System.Uri(Path.Combine(Environment.CurrentDirectory, PathExecuteModel(name, "exe"))).AbsoluteUri, /*путь до бинарника / или сырой код*/
                 Tests = JsonConvert.SerializeObject(d.TestsD) /* тестовые данные */
             };
         }

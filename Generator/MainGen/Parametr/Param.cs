@@ -70,7 +70,7 @@ namespace Generator.MainGen.Parametr
             StringBuilder s = new StringBuilder(raw);
             foreach (var elem in parametrs)
             {
-                s = s.Replace($"({elem.Name})", elem.Value);
+                s = s.Replace($"@{elem.Name}@", elem.Value);
                 /*if (args[i].Contains($"({elem.Name})"))
                 {
                     args[i] = args[i].Replace($"({elem.Name})", elem.Value);

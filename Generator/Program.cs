@@ -29,17 +29,17 @@ namespace Generator
         static void Main(string[] args)
         {
 
-            var path = @"C:\Users\kampukter\source\repos\Generator\Generator\bin\Debug\netcoreapp3.0\tasks\t3.txt";
+            var path = "NULL_PATH";
             if (args.Length > 0)
                 path = args[0];
             try
             {
                 int lr = 5;
                 //string[] arg = { @"C:\Users\kampukter\source\repos\Generator\Generator\bin\Debug\netcoreapp2.1\Exp.txt", "1.txt", "2.txt", "3.txt" };
-                string arg = $"tasks/test.txt";
+                string arg = $"tasks/test.gentemp";
                 Gen g = new Gen(new Parser(), new ParamsContainer());
                 GenFunctions gf = new GenFunctions();
-                var result = g.Run(path, lr, 1, false, true);
+                var result = g.Run(path, lr, 1, false, false);
 
                 Console.WriteLine($"\n\n# ШАБЛОННЫЙ_ВИД\n{result.Result.Template}");
                 Console.WriteLine($"# РЕШЕНИЕ\n```\n{result.Result.Code}\n```");
