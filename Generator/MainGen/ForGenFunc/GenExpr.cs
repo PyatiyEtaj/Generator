@@ -13,7 +13,7 @@ namespace Generator.MainGen.ForGenFunc
         {
             var args = GetArgs(param.RawData, parametrs);
 
-            if (args.Length < 1) throw new Exception($"Func #{FuncsEnum.genAE} take 1+ parametrs ( hardnessOfArithmeticExpression | range | type | countOfVars )");
+            if (args.Length < 1) throw new Exception($"функция #{FuncsEnum.genAE} принмает 1+ параметров ( сложность арифм. выражения | диапазон | тин | зависимость от кол-ва пермененных) [ Ошибка в строке = {param.RawData} ]");
 
             double range = args.Length > 1 ? Double.Parse(args[1].Replace('.', ',')) : 100.0;
             bool isDouble = args.Length > 2 ? args[2].Trim(' ') == "double" : true;

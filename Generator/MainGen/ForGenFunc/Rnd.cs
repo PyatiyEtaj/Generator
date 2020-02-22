@@ -27,7 +27,7 @@ namespace Generator.MainGen.ForGenFunc
             }
             catch (Exception e)
             {
-                throw new Exception($"\nError in str = {_rawstr}\nFunc #{FuncsEnum.rnd} cannot convert values, maybe it has wrong format | error = {e.Message}");
+                throw new Exception($"Функция #{FuncsEnum.rnd} не может конвертировать значения, убедитесь что значения имееют формат [double = 0.0] для [int = 0]| Ошибка в строке = {_rawstr} | error = {e.Message} ");
             }
 
             return str;
@@ -38,7 +38,7 @@ namespace Generator.MainGen.ForGenFunc
             _rawstr = param.RawData;
             var args = GetArgs(param.RawData, parametrs);
 
-            if (args.Length != 3 && args.Length != 4) throw new Exception($"Func #{FuncsEnum.rnd} take 3(4) parametrs (min | max| type (| count) )");
+            if (args.Length != 3 && args.Length != 4) throw new Exception($"Функция #{FuncsEnum.rnd} принимает 3(4) параметра ( минимум | максимум | тип (| количество) )");
 
             string res;
 
