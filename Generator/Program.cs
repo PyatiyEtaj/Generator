@@ -1,6 +1,4 @@
 ﻿using System;
-using System.IO;
-using System.Text;
 using Generator.MainGen;
 using Generator.MainGen.Parametr;
 using Generator.Parsing;
@@ -28,7 +26,6 @@ namespace Generator
 
         static void Main(string[] args)
         {
-
             var path = "NULL_PATH";
             if (args.Length > 0)
                 path = args[0];
@@ -36,10 +33,10 @@ namespace Generator
             {
                 int lr = 5;
                 //string[] arg = { @"C:\Users\kampukter\source\repos\Generator\Generator\bin\Debug\netcoreapp2.1\Exp.txt", "1.txt", "2.txt", "3.txt" };
-                string arg = $"tasks/test.gentemp";
+                string arg = $"tasks/t5.gentemp";
                 Gen g = new Gen(new Parser(), new ParamsContainer());
                 GenFunctions gf = new GenFunctions();
-                var result = g.Run(path, lr, 1, false, false);
+                var result = g.Run(path, lr, 1, false, true);
 
                 Console.WriteLine($"\n\n# ШАБЛОННЫЙ_ВИД\n{result.Result.Template}");
                 Console.WriteLine($"# РЕШЕНИЕ\n```\n{result.Result.Code}\n```");
