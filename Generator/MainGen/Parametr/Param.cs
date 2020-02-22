@@ -43,5 +43,10 @@ namespace Generator.MainGen.Parametr
 
             return s.ToString();
         }
+
+        public override string ToString()
+        {
+            return $"{Name} : {RawData}";
+        }
     }
 }

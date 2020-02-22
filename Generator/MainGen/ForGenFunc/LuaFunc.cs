@@ -19,7 +19,7 @@ namespace Generator.MainGen.ForGenFunc
         public override string Run(Param param, List<Param> parametrs = null)
         {
             var args = GetArgs(param.RawData, parametrs);
-            if (args.Length != 1) throw new Exception($"Функция #{FuncsEnum.lua} только 1 параметр");
+            if (args.Length != 1) throw new Exception($"Функция #{FuncsEnum.lua} только 1 параметр| строка = [ {param} ]");
             StringBuilder s = new StringBuilder(args[0]);
             if (s[0] == '\"' && s[s.Length - 1] == '\"')
             {
