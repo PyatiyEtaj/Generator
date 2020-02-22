@@ -13,41 +13,30 @@ namespace Generator.MainGen
 {
     public class GenFunctions
     {
-        private List<AFunc> _f = new List<AFunc>(); 
+        private Dictionary<FuncsEnum, AFunc> _f = new Dictionary<FuncsEnum, AFunc>();
 
         public GenFunctions()
         {
-            _f.Add(new Rnd());
-            _f.Add(new GenExpr());
-            _f.Add(new LuaFunc());
-            _f.Add(new ParentChecker());
+            _f.Add(FuncsEnum.rnd, new Rnd());
+            _f.Add(FuncsEnum.genAE, new GenExpr());
+            _f.Add(FuncsEnum.lua, new LuaFunc());
+            _f.Add(FuncsEnum.parent, new ParentChecker());
         }
 
         public string WhatToDoWithParam(FuncsEnum funcs, Param param, List<Param> parametrs)
         {
             switch (funcs)
             {
-                case FuncsEnum.rnd:
-                    return _f[0].Run(param, parametrs);
-
-                case FuncsEnum.genAE:
-                    return _f[1].Run(param, parametrs);
-
-                case FuncsEnum.lua:
-                    return _f[2].Run(param, parametrs);
-
-                case FuncsEnum.parent:
-                    return _f[3].Run(param, parametrs);
-
-                case FuncsEnum.getAEcode:
-                    return ((GenExpr)_f[1]).ExpressionCodeOnC();
-
-                default:
+                case FuncsEnum.justString:
                     return param.RawData;
 
-            }
+                case FuncsEnum.getAEcode:
+                    return ((GenExpr)_f[FuncsEnum.genAE]).ExpressionCodeOnC();
 
-            //return param.RawData;
+                default:
+                    return _f[funcs].Run(param, parametrs);
+
+            }
         }
 
         public bool CheckTests(List<DataContainer> lDc)
