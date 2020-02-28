@@ -74,7 +74,7 @@ namespace Generator.MainGen
                     if (dc.Data[0].Contains($"#{FuncsEnum.rnd}"))
                     {
                         Param p = new Param(dc.Data[0], -1, "TEMP");
-                        result.Add(new List<string>(_f[0].Run(p).Split(',')));
+                        result.Add(new List<string>(_f[0].Run(p).Split('|')));
                     }
                     else
                     {

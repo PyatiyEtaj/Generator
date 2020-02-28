@@ -149,7 +149,7 @@ namespace Generator.Parsing
 
         public string[] GetSeparatedArgs(string str)
         {
-            const char separator = '|';
+            const char separator = ',';
             const char super = '■';
             int i_start = str.IndexOf('(') + 1;
             if (i_start < 0) throw new Exception($"Не получилось найти окончание функции: [{str}]");
@@ -200,7 +200,7 @@ namespace Generator.Parsing
 
                 var parts = v.Split(':', 2);
                 if (parts.Length < 2) continue;
-                var rightPart = GetSeparatedValuesOfObjParam(parts[1], ',', '■');
+                var rightPart = GetSeparatedValuesOfObjParam(parts[1], '|', '■');
                 foreach (var s in rightPart)
                 {
                     if (s.Length == 0) continue;

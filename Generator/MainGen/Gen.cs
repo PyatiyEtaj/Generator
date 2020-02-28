@@ -73,11 +73,12 @@ namespace Generator.MainGen
                 throw new Exception("Тестовые данные содержат ошибку!");
             }
 
-            string name = ProcessCompiler.CreatePath(lr, var);
-            string pathtocpp = PathToSoulution(name);
+            string name = default;
 
             if (needCompile)
             {
+                name = ProcessCompiler.CreatePath(lr, var);
+                string pathtocpp = PathToSoulution(name);
                 using (StreamWriter sw = new StreamWriter(Path.Combine(pathtocpp, $"{name}.cpp"), false, Encoding.UTF8))
                 {
                     await sw.WriteLineAsync(d.Code);
