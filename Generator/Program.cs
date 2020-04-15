@@ -1,6 +1,4 @@
 ﻿using System;
-using System.IO;
-using System.Text;
 using Generator.MainGen;
 using Generator.MainGen.Parametr;
 using Generator.Parsing;

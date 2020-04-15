@@ -5,7 +5,8 @@ using System.Collections.Generic;
 using Generator.Parsing;
 using Generator.MainGen.Structs;
 using System.Threading.Tasks;
-using ALS.CheckModule.Processes;
+//MODULE = ALS.CheckModule
+//using ALS.CheckModule.Processes;
 using Newtonsoft.Json;
 using Generator.MainGen.Parametr;
 
@@ -54,7 +55,8 @@ namespace Generator.MainGen
                 }
             }
         }
-
+        /*
+        MODULE = ALS.CheckModule
         // обращение к модулю компиляции решений
         private async Task<bool> CompileSolution(int lr, int var)
         {
@@ -81,7 +83,7 @@ namespace Generator.MainGen
             }
 
             return name;
-        }
+        }*/
 
         public async Task<ResultData> Run(string fileName, int lr = 1, int var = 1, bool needCompile = false, bool returnRawCode = false)
         {
@@ -98,7 +100,8 @@ namespace Generator.MainGen
             }
 
             string name = "std_name";
-            if (needCompile) name = await Compile(data, lr, var);
+            //MODULE = ALS.CheckModule
+            //if (needCompile) name = await Compile(data, lr, var);
 
             return new ResultData()
             {
