@@ -39,6 +39,6 @@ steps:
     command: 'publish'
     publishWebProjects: false
     projects: '**/*.csproj'
-    arguments: '-o **/binaries'
+    arguments: '-o published'
     zipAfterPublish: false
     modifyOutputPath: true
