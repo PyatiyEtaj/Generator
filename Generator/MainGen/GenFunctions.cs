@@ -1,28 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Generator.MainGen.Parametr;
 using Generator.Parsing;
 using Newtonsoft.Json;
-using System.Text;
-using NLua;
-using Generator.MainGen.ForGenFunc;
+using Generator.MainGen.StdGenFunc;
 
 namespace Generator.MainGen
 {
     public class GenFunctions
     {
         private Dictionary<FuncsEnum, AFunc> _f = new Dictionary<FuncsEnum, AFunc>();
-
+        // инициализация функций
         public GenFunctions()
         {
             _f.Add(FuncsEnum.rnd, new Rnd());
             _f.Add(FuncsEnum.genAE, new GenExpr());
             _f.Add(FuncsEnum.lua, new LuaFunc());
             _f.Add(FuncsEnum.parent, new ParentChecker());
+            _f.Add(FuncsEnum.luaExtension, new LuaExtension());
         }
-
+        // исполнение нужной функции генератора
         public string WhatToDoWithParam(FuncsEnum funcs, Param param, List<Param> parametrs)
         {
             switch (funcs)
@@ -34,8 +30,7 @@ namespace Generator.MainGen
                     return ((GenExpr)_f[FuncsEnum.genAE]).ExpressionCodeOnC();
 
                 default:
-                    return _f[funcs].Run(param, parametrs);
-
+                    return _f[funcs].Run(param);
             }
         }
 

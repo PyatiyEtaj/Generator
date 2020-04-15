@@ -18,8 +18,6 @@ namespace Generator.Parsing
         private const string _arithmSigns = "знаки_арифм";
         private const string _arithmFuncs = "функции_арифм";
 
-
-
         private List<DataContainer> _storageData;
         private List<DataContainer> _testData;
         private string _templateStr, _code;
@@ -29,24 +27,22 @@ namespace Generator.Parsing
         {
             _storageData = new List<DataContainer>();
         }
-
+        // основной метод класса
         public GenData Read(string fileName)
         {
-            //_storageData.Clear();
-            //_testData.Clear();
             _code = "";
             _templateStr = "";
             string lines = "----";
             try
             {
                 string text;
-                using (StreamReader s = new StreamReader(fileName))
-                {
-                    text = s.ReadToEnd();
-                }
+                // чтение файла
+                using (StreamReader s = new StreamReader(fileName)) text = s.ReadToEnd();
+                // разделение файла наблоки
                 Regex r = new Regex($"{lines}(\\W*)\n");
                 text = r.Replace(text, lines);
                 var splitedText = text.Split(lines);
+                // обработка блоков
                 foreach (string str in splitedText)
                 {
                     var s = str.Trim(' ', '\n', '\r');
@@ -57,14 +53,11 @@ namespace Generator.Parsing
                     Parse(head, body);
                 }
 
-                //if (_storageData.Count > 0 && _templateStr.Length > 0 && _code.Length > 0)
-                //{ 
                 GenData = new GenData(_storageData, _templateStr, _code, _testData);
-                //}
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                throw; //new Exception($"Возникла ошибка во время парсинга фалйа! Сообщение об ошибке = [{e.Message}] ");
+                throw new Exception($"Возникла ошибка во время парсинга фалйа! Сообщение об ошибке = [{ex.Message}] ");
             }
 
             return GenData;
@@ -90,9 +83,7 @@ namespace Generator.Parsing
                     GetTestsD(body);
                     break;
                 default:
-                    //throw new Exception("Блок не имеет обозначения");
                     break;
-
             }
         }
 
@@ -106,7 +97,7 @@ namespace Generator.Parsing
                 {
                     if (pos > 0 && s[pos - 1] == '\\')
                     {
-                        s[pos - 1] = ' ';//s.Remove(pos - 1, 1);
+                        s[pos - 1] = ' ';
                     }
                     else
                     {
@@ -124,11 +115,9 @@ namespace Generator.Parsing
             else
                 s[i] = super;
         }
-        
-        public string[] GetSeparatedValuesOfObjParam(string str, char separator, char super)
+        // получения списка значений разделенных символом separator
+        public string[] GetSeparatedValues(string str, char separator, char super)
         {
-            //const char separator = ',';
-            //const char super = '■';
             StringBuilder s = new StringBuilder(str);
 
             for (int i = 0; i < s.Length; i++)
@@ -146,7 +135,7 @@ namespace Generator.Parsing
 
             return s.ToString().Split(super, StringSplitOptions.RemoveEmptyEntries);
         }
-
+        // получение списка аргументов передавемых в функции
         public string[] GetSeparatedArgs(string str)
         {
             const char separator = ',';
@@ -188,11 +177,11 @@ namespace Generator.Parsing
 
             return s.ToString().Split(super, StringSplitOptions.RemoveEmptyEntries);
         }
-        
+        // получение данных из строки body
         private List<DataContainer> GetDCFromBody(string body)
         {
             List<DataContainer> sd = new List<DataContainer>();
-            var lines = GetSeparatedValuesOfObjParam(body, ';', '■');
+            var lines = GetSeparatedValues(body, ';', '■');
             
             foreach (string v in lines)
             {
@@ -200,7 +189,7 @@ namespace Generator.Parsing
 
                 var parts = v.Split(':', 2);
                 if (parts.Length < 2) continue;
-                var rightPart = GetSeparatedValuesOfObjParam(parts[1], '|', '■');
+                var rightPart = GetSeparatedValues(parts[1], '|', '■');
                 foreach (var s in rightPart)
                 {
                     if (s.Length == 0) continue;
@@ -215,22 +204,22 @@ namespace Generator.Parsing
 
             return sd;
         }
-        
+        // обработка блока ХРАНИЛИЩЕ_ОБЪЕКТОВ
         private void GetStorageData(string body)
         {
             _storageData = GetDCFromBody(body);
         }
-
+        // обработка блока ШАБЛОННЫЙ_ВИД
         private void GetTemplateData(string body)
         {
             _templateStr = body.Trim(' ', '\r', '\n');
         }
-        
+        // обработка блока РЕШЕНИЕ
         private void GetCode (string body)
         {
             _code = body.Trim(' ', '\r', '\n');
         }
-        
+        // обработка блока СЛУЖЕБНОЕ
         private void GetServiceData(string body)
         {
             var sd = GetDCFromBody(body);
@@ -249,9 +238,8 @@ namespace Generator.Parsing
                         break;
                 }
             }
-            //throw new NotImplementedException();
         }
-        
+        // обработка блока ТЕСТОВЫЕ_ДАННЫЕ
         private void GetTestsD(string body)
         {
             _testData = GetDCFromBody(body);
