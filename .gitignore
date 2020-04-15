@@ -1,5 +1,6 @@
 [Bb]in/
-[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
 .idea/
 .vs/
 *.sln.DotSettings.user
