@@ -42,3 +42,8 @@ steps:
     arguments: '-o published'
     zipAfterPublish: false
     modifyOutputPath: true
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
+    artifactName: 'gen'
