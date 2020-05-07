@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Generator.MainGen;
 using Generator.MainGen.Parametr;
 using Generator.Parsing;
@@ -46,10 +47,22 @@ namespace Generator
             Console.ReadKey();
         }
 
+        static void temp()
+        {
+            var r = new GenFunctions().GetTestsFromJsonNewVersion("[{\"Name\":\"Тест1\",\"Data\":[\"#tasks/rnd_arr.rnd_array(10, 10, 100)\"]},{\"Name\":\"Тест2\",\"Data\":[\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\"]}]");
+            foreach (var item in r)
+            {
+                Console.WriteLine(item);
+            }
+            Console.ReadLine();
+        }
+
         static void Main(string[] args)
         {
+            //temp();
             External(args);
             //NonExternal();
+            
         }
     }
 }

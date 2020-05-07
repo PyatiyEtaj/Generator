@@ -94,7 +94,7 @@ namespace Generator.MainGen
 
             UseParams(data, parametrs);
 
-            if (data.TestsD != null && !_genFunctions.CheckTests(data.TestsD))
+            if (data.TestsD == null/* && !_genFunctions.CheckTests(data.TestsD)*/)
             {
                 throw new Exception("Тестовые данные содержат ошибку!");
             }

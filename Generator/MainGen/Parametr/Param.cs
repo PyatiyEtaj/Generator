@@ -55,7 +55,7 @@ namespace Generator.MainGen.Parametr
 
         public override string ToString()
         {
-            return $"{Name} : {RawData}";
+            return $"{Name} : {Value}";
         }
     }
 }

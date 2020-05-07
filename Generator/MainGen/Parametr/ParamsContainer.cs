@@ -3,6 +3,7 @@ using Generator.Parsing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Generator.MainGen.Parametr
@@ -10,6 +11,7 @@ namespace Generator.MainGen.Parametr
     public class ParamsContainer
     {
         public List<Param> Parametrs { get; set; } = new List<Param>();
+        public List<Param> ParametrsForTest { get; set; } = new List<Param>();
         public GenFunctions Gf = new GenFunctions();
         private Dictionary<int, FuncsEnum> _funcs = new Dictionary<int, FuncsEnum>();
         Parser _pr = new Parser();
@@ -51,9 +53,9 @@ namespace Generator.MainGen.Parametr
             return value;
         }
 
-        private (Param, bool) FirstInit(DataContainer d)
+        private (Param, bool) FirstInit(DataContainer d, List<Param> parametrs)
         {
-            Param param = new Param(default, default, d.Name, Parametrs);
+            Param param = new Param(default, default, d.Name, parametrs);
             var keyAndValue = _pr.GetAssociativeValues(param.Name);
             bool flag = keyAndValue.Item1 != default;
             if (flag)
@@ -72,7 +74,7 @@ namespace Generator.MainGen.Parametr
                     }
                 }
                 if (!isValueGot) raw = InitBestValue(d, keyAndValue.Item1);
-                param.Init(raw, default, keyAndValue.Item2, Parametrs);
+                param.Init(raw, default, keyAndValue.Item2, parametrs);
             }
 
             return (param, !flag);
@@ -84,7 +86,7 @@ namespace Generator.MainGen.Parametr
             Parametrs.Clear();
             foreach (DataContainer d in dataContainer)
             {
-                var inited = FirstInit(d);
+                var inited = FirstInit(d, Parametrs);
                 var param = inited.Item1;
                 /*  Dictionary<string, int> map = new Dictionary<string, int>();
                     for (int i = 0; i < d.Data.Count; i++)
@@ -111,5 +113,32 @@ namespace Generator.MainGen.Parametr
 
             return Parametrs;
         }
+
+        public List<Param> Tests(List<DataContainer> dataContainer)
+        {
+            Random r = new Random();
+            foreach (DataContainer d in dataContainer)
+            {
+                var inited = FirstInit(d, ParametrsForTest);
+                var param = inited.Item1;
+                StringBuilder s = new StringBuilder();
+                foreach (var item in d.Data)
+                {
+                    if (inited.Item2)
+                    {
+                        param.Init(item, default, d.Name, ParametrsForTest);
+                    }
+                    var ftype = WhatParamIsIt(param.GetFuncName());
+                    s.Append(", ");
+                    s.Append(Gf.WhatToDoWithParam(ftype, param));
+                }
+                s.Remove(0, 2);
+                param.Value = s.ToString();
+                ParametrsForTest.Add(param);
+            }
+
+            return ParametrsForTest;
+        }
+
     }
 }

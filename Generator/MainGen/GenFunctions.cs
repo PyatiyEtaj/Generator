@@ -53,6 +53,13 @@ namespace Generator.MainGen
             return true;
         }
 
+        public List<Param> GetTestsFromJsonNewVersion(string json)
+        {
+            var tests = JsonConvert.DeserializeObject<List<DataContainer>>(json);
+            ParamsContainer p = new ParamsContainer();
+            return p.Tests(tests);
+        }
+
         public List<List<string>> GetTestsFromJson(string json)
         {
             List<List<string>> result = new List<List<string>>();
