@@ -16,12 +16,18 @@ namespace Generator.MainGen.Parametr
 
         public Param(string raw, int pos, string name, List<Param> parametrs = null)
         {
+            Init(raw, pos, name, parametrs);
+            FunctionName = default;
+        }
+
+        public void Init(string raw, int pos, string name, List<Param> parametrs = null)
+        {
             raw = SubstituteValues(raw, parametrs);
+            name = SubstituteValues(name, parametrs);
             RawData = raw;
             Value = raw;
             Position = pos; // DEPRECATED
             Name = name;
-            FunctionName = default;
         }
 
         public string GetFuncName()

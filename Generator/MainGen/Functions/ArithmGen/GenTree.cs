@@ -11,7 +11,6 @@ namespace Generator
             tree.State = State.Sign;
             tree.Left = new Tree(tree);
             tree.Right = new Tree(tree);
-            //return _rnd.Next(0, 100) < 50 ? tree.Left : tree.Right;
         }
         private Tree FunctionNode(Tree tree)
         {

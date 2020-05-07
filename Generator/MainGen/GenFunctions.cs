@@ -19,12 +19,13 @@ namespace Generator.MainGen
             _f.Add(FuncsEnum.luaExtension, new LuaExtension());
         }
         // исполнение нужной функции генератора
-        public string WhatToDoWithParam(FuncsEnum funcs, Param param, List<Param> parametrs)
+        public string WhatToDoWithParam(FuncsEnum funcs, Param param)
         {
             switch (funcs)
             {
                 case FuncsEnum.justString:
-                    return param.RawData;
+                    //return param.RawData;
+                    return param.Value;
 
                 case FuncsEnum.getAEcode:
                     return ((GenExpr)_f[FuncsEnum.genAE]).ExpressionCodeOnC();

@@ -14,11 +14,11 @@ namespace Generator.MainGen
 {
     public class Gen
     {
-        private IParser _pr; // анализ файла-шаблона
-        private IParamsContainer _paramsContainer; // объекты-параметры
+        private Parser _pr; // анализ файла-шаблона
+        private ParamsContainer _paramsContainer; // объекты-параметры
         private GenFunctions _genFunctions = new GenFunctions(); // обертка для удобного использования функций генератора
 
-        public Gen(IParser pr, IParamsContainer paramsContainer)
+        public Gen(Parser pr, ParamsContainer paramsContainer)
         {
             _pr = pr;
             _paramsContainer = paramsContainer;

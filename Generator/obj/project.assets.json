@@ -2,13 +2,13 @@
   "version": 3,
   "targets": {
     ".NETCoreApp,Version=v3.0": {
-      "KeraLua/1.0.22": {
+      "KeraLua/1.0.29": {
         "type": "package",
         "compile": {
-          "lib/netcoreapp2.0/KeraLua.dll": {}
+          "lib/netstandard2.0/KeraLua.dll": {}
         },
         "runtime": {
-          "lib/netcoreapp2.0/KeraLua.dll": {}
+          "lib/netstandard2.0/KeraLua.dll": {}
         },
         "runtimeTargets": {
           "runtimes/linux-x64/native/liblua53.so": {
@@ -38,40 +38,43 @@
           "lib/netstandard2.0/Newtonsoft.Json.dll": {}
         }
       },
-      "NLua/1.4.24": {
+      "NLua/1.4.32": {
         "type": "package",
         "dependencies": {
-          "KeraLua": "1.0.22"
+          "KeraLua": "1.0.29"
         },
         "compile": {
-          "lib/netcoreapp2.0/NLua.dll": {}
+          "lib/netstandard2.0/NLua.dll": {}
         },
         "runtime": {
-          "lib/netcoreapp2.0/NLua.dll": {}
+          "lib/netstandard2.0/NLua.dll": {}
         }
       }
     }
   },
   "libraries": {
-    "KeraLua/1.0.22": {
-      "sha512": "NG9BqF8jKAEgjp7btu6FQjFWhbDOLgnJww2dhBEslEW/TwGgyp4snhM/SDvaI5gV0k2p5BHkzhF4u8hpf5oU8A==",
+    "KeraLua/1.0.29": {
+      "sha512": "D6VsQZyy4JN2gvjRxPksz1jsPPx5v3qtUJfMBV3+FAJccSWJhyTSyKkTcFEm4Oc94KhZdAUcH+uB3iUpvhgmOA==",
       "type": "package",
-      "path": "keralua/1.0.22",
+      "path": "keralua/1.0.29",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE",
         "build/net45/KeraLua.targets",
-        "keralua.1.0.22.nupkg.sha512",
+        "keralua.1.0.29.nupkg.sha512",
         "keralua.nuspec",
         "lib/MonoAndroid/KeraLua.dll",
         "lib/MonoAndroid/KeraLua.xml",
         "lib/net45/KeraLua.dll",
         "lib/net45/KeraLua.xml",
-        "lib/netcoreapp2.0/KeraLua.dll",
-        "lib/netcoreapp2.0/KeraLua.xml",
+        "lib/netcoreapp3.1/KeraLua.dll",
+        "lib/netcoreapp3.1/KeraLua.xml",
         "lib/netstandard2.0/KeraLua.dll",
         "lib/netstandard2.0/KeraLua.xml",
+        "lib/uap10.0/KeraLua.dll",
+        "lib/uap10.0/KeraLua.pri",
+        "lib/uap10.0/KeraLua.xml",
         "lib/xamarinios/KeraLua.dll",
         "lib/xamarinios/KeraLua.xml",
         "lib/xamarinmac/KeraLua.dll",
@@ -83,7 +86,11 @@
         "runtimes/linux-x64/native/liblua53.so",
         "runtimes/osx/native/liblua53.dylib",
         "runtimes/win-x64/native/lua53.dll",
-        "runtimes/win-x86/native/lua53.dll"
+        "runtimes/win-x86/native/lua53.dll",
+        "runtimes/win10-arm/nativeassets/uap10.0/lua53.dll",
+        "runtimes/win10-arm64/nativeassets/uap10.0/lua53.dll",
+        "runtimes/win10-x64/nativeassets/uap10.0/lua53.dll",
+        "runtimes/win10-x86/nativeassets/uap10.0/lua53.dll"
       ]
     },
     "Newtonsoft.Json/12.0.2": {
@@ -116,30 +123,32 @@
         "newtonsoft.json.nuspec"
       ]
     },
-    "NLua/1.4.24": {
-      "sha512": "N5ujfmF3ppNgiBsNuCvL58nYMM62u0M+ja0msgfTJXSaZC8hSwExc8TecUrwLln4I4Qt3niUzV5bI0OVfD0Wcw==",
+    "NLua/1.4.32": {
+      "sha512": "D3ZBY39MRpaMHiQVCOPmLXHpgaw5pFIYT2Tj8k36tL/4SeiapvhQL5LhysGCPp32/00o3i74+vu2g5XusGPISA==",
       "type": "package",
-      "path": "nlua/1.4.24",
+      "path": "nlua/1.4.32",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE",
         "lib/MonoAndroid/NLua.dll",
         "lib/net45/NLua.dll",
-        "lib/netcoreapp2.0/NLua.dll",
+        "lib/netcoreapp3.1/NLua.dll",
         "lib/netstandard2.0/NLua.dll",
+        "lib/uap10.0/NLua.dll",
+        "lib/uap10.0/NLua.pri",
         "lib/xamarinios/NLua.dll",
         "lib/xamarinmac/NLua.dll",
         "lib/xamarintvos/NLua.dll",
         "lib/xamarinwatchos/NLua.dll",
-        "nlua.1.4.24.nupkg.sha512",
+        "nlua.1.4.32.nupkg.sha512",
         "nlua.nuspec"
       ]
     }
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.0": [
-      "NLua >= 1.4.24",
+      "NLua >= 1.4.32",
       "Newtonsoft.Json >= 12.0.2"
     ]
   },
@@ -186,7 +195,7 @@
         "dependencies": {
           "NLua": {
             "target": "Package",
-            "version": "[1.4.24, )"
+            "version": "[1.4.32, )"
           },
           "Newtonsoft.Json": {
             "target": "Package",
@@ -203,12 +212,22 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.AspNetCore.App.Ref",
+            "version": "[3.0.1, 3.0.1]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Host.win-x64",
+            "version": "[3.0.3, 3.0.3]"
+          }
+        ],
         "frameworkReferences": {
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.0.100\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.201\\RuntimeIdentifierGraph.json"
       }
     }
   }

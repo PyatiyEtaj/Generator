@@ -32,12 +32,9 @@ namespace Generator
 
         private void AEConst(Tree tree)
         {
-            if (_numberOfVars < _countOfVars) { MakeNeededVars(tree); return; }
+            if (_countOfVars > 2 && _numberOfVars < _countOfVars) { MakeNeededVars(tree); return; }
 
-            var t = _rnd.Next(0, 101) < 50 ?
-                    tree.Right
-                :
-                    tree.Left;
+            Tree t = (_rnd.Next(0,100) > 50 && tree.Right.State == State.Var) ? tree.Right : tree.Left;
 
             if (t.State == State.Var)
             {
@@ -119,6 +116,8 @@ namespace Generator
         public void MakeAE(int hard, double range, bool isDouble, int countOfVars, int finesse)
         {
             if (hard < 1) throw new Exception("сложность выражения должна быть больше 1");
+
+            Code = Expression = ExpressionMD = default;
 
             _finesse = finesse;
             _rangeOfConst = range;

@@ -8,7 +8,7 @@ namespace Generator.MainGen.StdGenFunc
     // Асбтрактный класс - функция генератора
     public abstract class AFunc
     {
-        private IParser _pr = new Parser();
+        private Parser _pr = new Parser();
 
         // использование анализатора для получение
         // списка аргументов функции 

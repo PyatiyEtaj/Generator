@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace Generator.Parsing
 {
-    public class Parser : IParser
+    public class Parser
     {
         /*названия блоков*/
         private const string _storage = "ХРАНИЛИЩЕ_ОБЪЕКТОВ";
@@ -87,9 +87,31 @@ namespace Generator.Parsing
             }
         }
 
-        private int FindStringEnd(StringBuilder s, int pos)
+
+        public (string, string) GetAssociativeValues(string str)
         {
-            const char separator = '\"';
+            return GetQuotedValues(str, '[', ']');
+        }
+
+        public (string, string) GetQuotedValues(string s, char bracketS, char bracketE)
+        {
+            string key = default, value = default;
+            var start = s.IndexOf(bracketS);
+            if (start >= 0)
+            {
+                var end = FindStringEnd(new StringBuilder(s), start, bracketE);
+                if (end < 0) throw new Exception($"{s} - отсутствует символ окончания {bracketE}");
+                key = s.Substring(start + 1, end - start - 1).Trim();
+                value = s.Remove(start, end - start+1);
+                //return s.Substring(st + 1, end - st-1).Trim();
+            }
+
+            return (key, value);
+        }
+
+        public int FindStringEnd(StringBuilder s, int pos, char separator)
+        {
+            //const char separator = '\"';
             pos++;
             for (;pos < s.Length; pos++)
             {
@@ -128,7 +150,7 @@ namespace Generator.Parsing
                 }
                 else if (s[i] == '\"')
                 {
-                    i = FindStringEnd(s, i);
+                    i = FindStringEnd(s, i, '\"');
                     if (i < 0) throw new Exception($"Не получилось найти окончание строки: [{s.ToString()}]");
                 }
             }
@@ -161,7 +183,7 @@ namespace Generator.Parsing
                         }
                         break;
                     case '\"':
-                        i = FindStringEnd(s, i);
+                        i = FindStringEnd(s, i, '\"');
                         if (i < 0) throw new Exception($"Не получилось найти окончание строки: [{str}]");
                         break;
                     case separator:
