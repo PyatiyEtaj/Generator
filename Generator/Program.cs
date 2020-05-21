@@ -36,14 +36,20 @@ namespace Generator
         static void NonExternal()
         {
             int lr = 1;
-            string arg = $"tasks/test.gentemp";
+            //string arg = $"tasks/test.gentemp";
+            string arg = $"tasks/fuck.gentemp";
             Gen g = new Gen(new Parser(), new ParamsContainer());
             GenFunctions gf = new GenFunctions();
             var result = g.Run(arg, lr, 1, false, true);
 
+            /*foreach (var t in gf.GetTestsFromJsonNewVersion(result.Result.Tests))
+                Console.WriteLine(t);*/
+
             Console.WriteLine($"\n\n# ШАБЛОННЫЙ_ВИД\n{result.Result.Template}");
             Console.WriteLine($"# РЕШЕНИЕ\n```\n{result.Result.Code}\n```");
             Console.WriteLine($"# ТЕСТОВЫЕ_ДАННЫЕ\n```\n{result.Result.Tests}\n```");
+            foreach (var t in gf.GetTestsFromJsonNewVersion(result.Result.Tests))
+                Console.WriteLine(t);
             Console.ReadKey();
         }
 
