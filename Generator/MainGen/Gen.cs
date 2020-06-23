@@ -1,114 +1,123 @@
-﻿using System;
-using System.IO;
-using System.Text;
-using System.Collections.Generic;
+﻿using Generator.MainGen.Structs;
 using Generator.Parsing;
-using Generator.MainGen.Structs;
-using System.Threading.Tasks;
-//MODULE = ALS.CheckModule
-//using ALS.CheckModule.Processes;
 using Newtonsoft.Json;
-using Generator.MainGen.Parametr;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace Generator.MainGen
 {
     public class Gen
     {
-        private Parser _pr; // анализ файла-шаблона
-        private ParamsContainer _paramsContainer; // объекты-параметры
-        private GenFunctions _genFunctions = new GenFunctions(); // обертка для удобного использования функций генератора
-
-        public Gen(Parser pr, ParamsContainer paramsContainer)
+        // анализ шаблон-файлов
+        private Parser _pr = new Parser();
+        // доступные функции
+        public GenFunctions _gf = new GenFunctions();
+        // настройки генератора
+        private Services _services = new Services();
+        private const char _matchChar = '@';
+        public Gen()
         {
-            _pr = pr;
-            _paramsContainer = paramsContainer;
+            // инициализация стандартных настроек
+            InitDefaultServices();
+            _gf.Init(_services);
         }
-
-        private string PathSourceModelCode(string name, string fextension) => Path.Combine("sourceCodeModel", $"{name}.{fextension}");
-        private string PathExecuteModel(string name, string fextension) => Path.Combine("executeModel", $"{name}.{fextension}");
-
-        private string PathToSoulution(string subpath)
+        // использование готового объекта-параметра в шаблоне
+        private void UseParam(List<(BlockEnum, StringBuilder)> blocks, Param p)
         {
-            if (!Directory.Exists($"sourceCodeModel\\{subpath}"))
+            foreach (var item in blocks)
             {
-                Directory.CreateDirectory($"sourceCodeModel\\{subpath}");
-            }
-
-            return $"sourceCodeModel\\{subpath}";
-        }
-
-        // использование объектов-параметров
-        private void UseParams(GenData data, List<Param> parametrs)
-        {
-            foreach (var elem in parametrs)
-            {
-                var pattern = $"@{elem.Name}@";
-                data.Template = data.Template.Replace(pattern, elem.Value);
-                data.Code = data.Code.Replace(pattern, elem.Value);
-                if (data.TestsD == null) continue;
-                for (int i = 0; i < data.TestsD.Count; i++)
+                // поиск мест где необходима подстановка
+                Regex r = new Regex($"({_matchChar})({p.Name})(\\.?)([^{_matchChar}]*)({_matchChar})");
+                var ms = r.Matches(item.ToString());
+                // непосредственная подстановка параметров
+                foreach (Match i in ms)
                 {
-                    for (int j = 0; j < data.TestsD[i].Data.Count; j++)
-                    {
-                        data.TestsD[i].Data[j] = data.TestsD[i].Data[j].Replace(pattern, elem.Value);
-                    }
+                    var full = i.Groups[0].ToString();
+                    var fieldName = i.Groups[4].ToString();
+                    var bestValue = p.GetField(fieldName);
+                    item.Item2.Replace(full, bestValue);
                 }
             }
         }
-        /*
-        MODULE = ALS.CheckModule
-        // обращение к модулю компиляции решений
-        private async Task<bool> CompileSolution(int lr, int var)
+
+        // вывод задания, эталонного решения(кода), тестовых данных (json)
+        public (string, string, string) GetTaskCodeTests(List<(BlockEnum, StringBuilder)> blocks)
         {
-            string name = ProcessCompiler.CreatePath(lr, var);
-            //ProcessCompiler pc = new ProcessCompiler(Path.Combine("sourceCodeModel", $"{lrPath}.cpp"), Path.Combine("executeModel", $"{lrPath}.exe"));
-            ProcessCompiler pc = new ProcessCompiler(PathToSoulution(name), PathExecuteModel(name, "exe"));
-            return await Task.Run(() => pc.Execute(60000));
+            var task = blocks.FirstOrDefault(x => x.Item1 == BlockEnum.Template).Item2.ToString();
+            var code = blocks.FirstOrDefault(x => x.Item1 == BlockEnum.Solution).Item2.ToString();
+            var tests = blocks.FirstOrDefault(x => x.Item1 == BlockEnum.Tests).Item2.ToString();
+            return (task, code, JsonConvert.SerializeObject(tests.Trim()));
         }
 
-        // компиляция эталонного решения
-        private async Task<string> Compile(GenData data, int lr, int var)
-        {   
-            string name = ProcessCompiler.CreatePath(lr, var); // имя исходного кода эталонного решения
-            string pathtocpp = PathToSoulution(name); // путь до исходного кода
-            // создание файла с исходным кодом в ПЗУ
-            using (StreamWriter sw = new StreamWriter(Path.Combine(pathtocpp, $"{name}.cpp"), false, Encoding.UTF8))
-            {
-                await sw.WriteLineAsync(data.Code);
-            }
-            // компиляция решения
-            if (!await CompileSolution(lr, var))
-            {
-                throw new Exception("Ошибка во время компиляции!");
-            }
-
-            return name;
-        }*/
-
-        public async Task<ResultData> Run(string fileName, int lr = 1, int var = 1, bool needCompile = false, bool returnRawCode = false)
+        // получение очередного параметра из секции ХРАНИЛИЩЕ_ОБЪЕКТОВ
+        private IEnumerable<Param> GetNextParam(StringBuilder block)
         {
-            var data = await Task.Run(() => _pr.Read(fileName));
-            if (data == null) return null;
-
-            var parametrs = _paramsContainer.GenNewParametrs(data.Sd);
-
-            UseParams(data, parametrs);
-
-            if (data.TestsD == null/* && !_genFunctions.CheckTests(data.TestsD)*/)
+            // получение объекта-параметра
+            while (_pr.GetParamString(block, out string paramStr))
             {
-                throw new Exception("Тестовые данные содержат ошибку!");
+                // создание готового параметра
+                var p = CreateParamAsync(paramStr);
+                yield return p.Result;
             }
-
-            string name = "std_name";
-            //MODULE = ALS.CheckModule
-            //if (needCompile) name = await Compile(data, lr, var);
-
-            return new ResultData()
-            {
-                Template = data.Template, /* шаблон задания */
-                Code = (returnRawCode) ? data.Code : new System.Uri(Path.Combine(Environment.CurrentDirectory, PathExecuteModel(name, "exe"))).AbsoluteUri, /*путь до бинарника / или сырой код*/
-                Tests = JsonConvert.SerializeObject(data.TestsD) /* тестовые данные */
-            };
         }
+
+        // создание списка готовых к использования параметров
+        private List<Param> GetParams(StringBuilder block)
+        {
+            List<Param> list = new List<Param>();
+            foreach (Param p in GetNextParam(block))
+            {
+                list.Add(p);
+            }
+            return list;
+        }
+
+        // инициализация стандартных настроек
+        private void InitDefaultServices()
+        {
+            _services.InitDefault();
+        }
+
+        // применение конкретных настроек
+        private void InitServices(StringBuilder serviceBlock)
+        {
+            var options = GetParams(serviceBlock);
+            _services.Init(options);
+            _gf.Init(_services);
+        }
+
+
+        // создание задания, эталонного решения(кода), тестовых данных
+        public async Task<(string, string, string)> RunAsync(string fileName)
+        {
+            // получение всех блоков шаблона-файла
+            var blocks = await Task.Run(() => _pr.GetBlocks(fileName));
+            StringBuilder storage = blocks.FirstOrDefault(x => x.Item1 == BlockEnum.Storage).Item2;
+            StringBuilder services = blocks.FirstOrDefault(x => x.Item1 == BlockEnum.Service).Item2;
+            InitServices(services);
+            foreach (Param p in GetNextParam(storage))
+            {
+                UseParam(blocks, p);
+            }
+            return await Task.Run(() => GetTaskCodeTests(blocks));
+        }
+        // создание готового параметра
+        public async Task<Param> CreateParamAsync(string paramStr)
+        {
+            Param p = await Task.Run(() => _pr.CreateRawParam(paramStr));
+            var value = p.GetBestData();
+            var fs = await Task.Run(() => _pr.CreateFunctionStruct(value));
+            p.SetValue(_gf.WhatToDoWithParam(fs));
+            return p;
+        }
+        // получение списка готовых тестовых данных из json
+        public List<Param> GetTestsFromJson(string json)
+        {
+            var tests = new StringBuilder(JsonConvert.DeserializeObject<string>(json));
+            return GetParams(tests);
+        }        
     }
 }
