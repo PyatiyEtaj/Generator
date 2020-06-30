@@ -125,22 +125,29 @@ namespace Generator.Parsing
             return outputParam != default;
         }
         // создание словаря (ключ-значение) всех значений присвоенных объекту-параметру
-        private Dictionary<string, string> CreateDictionaryFromRaw(string[] raw)
+        private Dictionary<string, string> CreateDictionaryFromRaw(string[] raw, string name)
         {
-            Dictionary<string, string> d = new Dictionary<string, string>();
-            int iter = 0;
-            // для каждого значения
-            foreach (var str in raw)
+            try
             {
-                // выбирается наиболее подходящий ключ
-                var res = GetAssociativeValues(str);
-                var key = res.Item1 != default ? res.Item1 : iter.ToString();
-                // если ключ не был установлен явно, то используется просто номер
-                if (res.Item1 == default) iter++;
-                d.Add(key, res.Item2);
-            }
+                Dictionary<string, string> d = new Dictionary<string, string>();
+                int iter = 0;
+                // для каждого значения
+                foreach (var str in raw)
+                {
+                    // выбирается наиболее подходящий ключ
+                    var res = GetAssociativeValues(str);
+                    var key = res.Item1 != default ? res.Item1 : iter.ToString();
+                    // если ключ не был установлен явно, то используется просто номер
+                    if (res.Item1 == default) iter++;
+                    d.Add(key, res.Item2);
+                }
 
-            return d;
+                return d;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"параметр = {name} [сообщение = {ex.Message}]");
+            }
         }
         // создание сырого параметра, все значения находятся в первоначальном виде
         public Param CreateRawParam(string paramStr)
@@ -152,7 +159,7 @@ namespace Generator.Parsing
                 var rawName = GetAssociativeValues(parts[0]);
                 var raw  = GetSeparatedValues(parts[1], _or);
                 //            список всех значений          имя параметра  выбранное значение
-                p = new Param(CreateDictionaryFromRaw(raw), rawName.Item2, rawName.Item1);
+                p = new Param(CreateDictionaryFromRaw(raw, rawName.Item2), rawName.Item2, rawName.Item1);
             }
 
             return p;

@@ -3,6 +3,8 @@ using Generator.Parsing;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -18,6 +20,7 @@ namespace Generator.MainGen
         // настройки генератора
         private Services _services = new Services();
         private const char _matchChar = '@';
+        private const string _weightName = "Веса";
         public Gen()
         {
             // инициализация стандартных настроек
@@ -89,6 +92,16 @@ namespace Generator.MainGen
             _gf.Init(_services);
         }
 
+        // создание готового параметра
+        public async Task<Param> CreateParamAsync(string paramStr)
+        {
+            Param p = await Task.Run(() => _pr.CreateRawParam(paramStr));
+            var v = p.GetBestData();
+            var fs = await Task.Run(() => _pr.CreateFunctionStruct(v));
+
+            p.SetValue(_gf.WhatToDoWithParam(fs));
+            return p;
+        }
 
         // создание задания, эталонного решения(кода), тестовых данных
         public async Task<(string, string, string)> RunAsync(string fileName)
@@ -104,20 +117,72 @@ namespace Generator.MainGen
             }
             return await Task.Run(() => GetTaskCodeTests(blocks));
         }
-        // создание готового параметра
-        public async Task<Param> CreateParamAsync(string paramStr)
+              
+        //Создание тестов
+
+        //получить слудующий тест
+        private IEnumerable<Test> GetNextTest(StringBuilder block)
+        {
+            // получение объекта-параметра
+            while (_pr.GetParamString(block, out string paramStr))
+            {
+                // создание готового параметра
+                var p = CreateTestAsync(paramStr);
+                yield return p.Result;
+            }
+        }
+
+        // создание списка готовых к использования тестов
+        private List<Test> GetTests(StringBuilder block)
+        {
+            List<Test> list = new List<Test>();
+            foreach (Test t in GetNextTest(block))
+            {
+                list.Add(t);
+            }
+            return list;
+        }
+
+        // установка весов
+        private double GetWeigth(string weigth)
+        {
+            weigth = weigth.Replace('.', ',');
+            double res = 20.0;
+            if (!double.TryParse(weigth, out res))
+            {
+                if (int.TryParse(weigth, out int tmp))
+                    res = tmp;
+            }
+            if (res < 1.0e-12)
+                res = 20.0;
+            return res;
+        }
+
+        // создание готового теста
+        private async Task<Test> CreateTestAsync(string paramStr)
         {
             Param p = await Task.Run(() => _pr.CreateRawParam(paramStr));
-            var value = p.GetBestData();
-            var fs = await Task.Run(() => _pr.CreateFunctionStruct(value));
-            p.SetValue(_gf.WhatToDoWithParam(fs));
-            return p;
+            Test t = new Test();
+            t.Weight = GetWeigth(p.Key);
+            t.Name = p.Name;
+            foreach (var data in p.Data)
+            {
+                var fs = await Task.Run(() => _pr.CreateFunctionStruct(data.Value));
+                var res = _gf.WhatToDoWithParam(fs);
+                foreach (var i in res)
+                {
+                    t.Data.Add(i.Item2);
+                }
+            }
+            /*var v = p.GetBestData();*/
+            return t;
         }
+
         // получение списка готовых тестовых данных из json
-        public List<Param> GetTestsFromJson(string json)
+        public List<Test> GetTestsFromJson(string json)
         {
-            var tests = new StringBuilder(JsonConvert.DeserializeObject<string>(json));
-            return GetParams(tests);
-        }        
+            var t = new StringBuilder(JsonConvert.DeserializeObject<string>(json));
+            return GetTests(t);
+        }
     }
 }

@@ -10,28 +10,41 @@ namespace Generator
 {
     class Program
     {
+
+        static void Output((string, string, string) r)
+        {
+            Gen g = new Gen();
+            Console.WriteLine($"\n\n# ШАБЛОННЫЙ_ВИД\n{r.Item1}");
+            Console.WriteLine($"# РЕШЕНИЕ\n```\n{r.Item2}\n```");
+            Console.WriteLine($"# ТЕСТОВЫЕ_ДАННЫЕ\n__JSON__\n```\n{r.Item3}\n```");
+            string json = r.Item3;
+            var tests = g.GetTestsFromJson(json);
+            StringBuilder str = new StringBuilder("__Готовые данные__\n```\n");
+            foreach (var p in tests)
+            {
+                str.Append($"[\n\tимя теста = {p.Name} | вес = {p.Weight}\n\tтесты = ");
+                foreach (var elem in p.Data)
+                {
+                    str.Append($"{{{elem}}}, ");
+                }
+                str.Remove(str.Length - 2, 2);
+                str.Append("\n]\n");
+            }
+            Console.WriteLine($"{str}```");
+        }
         
         static void External(string[] args)
         {
             if (args.Length > 1)
             {
-                var pathToOut = args[0];
+                var pathToExt = args[0];
                 var path = args[1];
                 try
                 {
                     Gen g = new Gen();
                     var r = g.RunAsync(path);
-
-                    Console.WriteLine($"\n\n# ШАБЛОННЫЙ_ВИД\n{r.Result.Item1}");
-                    Console.WriteLine($"# РЕШЕНИЕ\n```\n{r.Result.Item2}\n```");
-                    Console.WriteLine($"# ТЕСТОВЫЕ_ДАННЫЕ\n```\n{r.Result.Item3}\n```");
-                    StringBuilder str = new StringBuilder("# ТЕСТОВЫЕ_ДАННЫЕ_INTERPRET\n```\n");
-                    foreach (var p in g.GetTestsFromJson(r.Result.Item3))
-                    {
-                        str.Append(p);
-                        str.Append("\n");
-                    }
-                    Console.WriteLine($"{str}```");
+                    Output(r.Result);
+                    
                 }
                 catch (Exception e)
                 {
@@ -46,22 +59,9 @@ namespace Generator
             {
                 //string arg = $"tasks/tempalate.gentemp";
                 string arg = $"tasks/test_table.gentemp";
-
                 Gen g = new Gen();
                 var r = g.RunAsync(arg);
-
-                var tests = g.GetTestsFromJson(r.Result.Item3);
-                Console.WriteLine($"\n\n# ШАБЛОННЫЙ_ВИД\n{r.Result.Item1}");
-                Console.WriteLine($"# РЕШЕНИЕ\n```\n{r.Result.Item2}\n```");
-                Console.WriteLine($"# ТЕСТОВЫЕ_ДАННЫЕ\n```\n{r.Result.Item3}\n```");
-                StringBuilder str = new StringBuilder("# ТЕСТОВЫЕ_ДАННЫЕ_INTERPRET\n```\n");
-                //Console.WriteLine($"# ТЕСТОВЫЕ_ДАННЫЕ_INTERPRET\n```\n{g.GetTestsFromJson(r.Result.Item3)}\n```");
-                foreach (var p in g.GetTestsFromJson(r.Result.Item3))
-                {
-                    str.Append(p);
-                    str.Append("\n");
-                }
-                Console.WriteLine($"{str}```");
+                Output(r.Result);
             }
             catch (Exception e)
             {
