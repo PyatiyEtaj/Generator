@@ -7,7 +7,20 @@ namespace Generator.MainGen.StdGenFunc
 {
     class LuaExtension : LuaFunc
     {
-        public LuaExtension(bool multypleReturnDatas = false) : base(multypleReturnDatas) {}
+        private string _tempDir = default;
+        public LuaExtension(string tempDir = default,bool multypleReturnDatas = false) : base(multypleReturnDatas) 
+        {
+            _tempDir = tempDir;
+        }
+
+        private string GetPackage(string moduleName)
+        {
+            var dir = Path.GetDirectoryName(moduleName);
+            var package =
+                _tempDir == default ? "" : $"package.path = package.path .. ';{Path.Combine(_tempDir, dir, "?.lua").Replace("\\", "/")}';";
+            return package;
+        }
+
         public override dynamic Run(FunctionStruct fs)
         {
             // анализ - какой метод необходимо вызвать и из какого модуля
@@ -18,8 +31,8 @@ namespace Generator.MainGen.StdGenFunc
             string moduleName =  fs.FullFunctionName.Substring(0, pos).Replace("\\", "/");
             string funcName = fs.FullFunctionName.Substring(pos + 1, fs.FullFunctionName.Length - pos - 1);
             // создание кода для вызова метода
-            //fs.Args = $"\"package.path = package.path .. \";{Directory.GetCurrentDirectory().Replace("\\", "/")}\";local lib = require('{moduleName}');return lib.{funcName}({fs.Args});\"";            
-            fs.Args = $"\"local lib = require('{moduleName}');return lib.{funcName}({fs.Args});\"";
+            var package = GetPackage(moduleName);
+            fs.Args = $"\"{package} local lib = require('{moduleName}');return lib.{funcName}({fs.Args});\"";
             // вызов метода
             return base.Run(fs);
         }

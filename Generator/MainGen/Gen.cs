@@ -2,6 +2,7 @@
 using Generator.Parsing;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Security.Cryptography.X509Certificates;
@@ -20,11 +21,11 @@ namespace Generator.MainGen
         // настройки генератора
         private Services _services = new Services();
         private const char _matchChar = '@';
-        private const string _weightName = "Веса";
-        public Gen()
+        private const double _defaultWeight = 20.0;
+        public Gen(string tempDir = default)
         {
             // инициализация стандартных настроек
-            InitDefaultServices();
+            _services.InitDefault(tempDir);
             _gf.Init(_services);
         }
         // использование готового объекта-параметра в шаблоне
@@ -78,12 +79,7 @@ namespace Generator.MainGen
             return list;
         }
 
-        // инициализация стандартных настроек
-        private void InitDefaultServices()
-        {
-            _services.InitDefault();
-        }
-
+        
         // применение конкретных настроек
         private void InitServices(StringBuilder serviceBlock)
         {
@@ -147,14 +143,14 @@ namespace Generator.MainGen
         private double GetWeigth(string weigth)
         {
             weigth = weigth.Replace('.', ',');
-            double res = 20.0;
+            double res = _defaultWeight;
             if (!double.TryParse(weigth, out res))
             {
                 if (int.TryParse(weigth, out int tmp))
                     res = tmp;
             }
             if (res < 1.0e-12)
-                res = 20.0;
+                res = _defaultWeight;
             return res;
         }
 
@@ -174,7 +170,6 @@ namespace Generator.MainGen
                     t.Data.Add(i.Item2);
                 }
             }
-            /*var v = p.GetBestData();*/
             return t;
         }
 

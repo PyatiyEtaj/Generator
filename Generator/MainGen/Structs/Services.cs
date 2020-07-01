@@ -9,18 +9,21 @@ namespace Generator.MainGen.Structs
     {
         private const string _arithmSigns = "знаки_арифм";
         private const string _arithmFuncs = "функции_арифм";
+
+        public string TempDir;
         public Elems Elems { get; set; }
 
-        public void InitDefault()
+        public void InitDefault(string tempDir = default)
         {
             Elems = new Elems();
             Elems.Default();
+            TempDir = tempDir;
         }
 
-        public void Init(List<Param> Structss)
+        public void Init(List<Param> Structs)
         {
             Elems = new Elems();
-            foreach (Param p in Structss)
+            foreach (Param p in Structs)
             {
                 switch (p.Name.ToLower())
                 {

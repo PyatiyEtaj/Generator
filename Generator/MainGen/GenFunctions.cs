@@ -18,9 +18,9 @@ namespace Generator.MainGen
             _f.Add(FuncsEnum.случайноеЦелое,    new RndInt      (UseMultipleReturningParams));
             _f.Add(FuncsEnum.случайноеДробное,  new RndDouble   (UseMultipleReturningParams));
             _f.Add(FuncsEnum.луа,               new LuaFunc     (UseMultipleReturningParams));
-            _f.Add(FuncsEnum.расширениеЛуа,     new LuaExtension(UseMultipleReturningParams));
-            _f.Add(FuncsEnum.создатьАВ,         new GenExpr     (s.Elems, UseMultipleReturningParams));
-            _f.Add(FuncsEnum.создатьАВдробь,    new GenExprFrac (s.Elems, UseMultipleReturningParams));
+            _f.Add(FuncsEnum.расширениеЛуа,     new LuaExtension(s.TempDir, UseMultipleReturningParams));
+            _f.Add(FuncsEnum.создатьАВ,         new GenExpr     (s.Elems,   UseMultipleReturningParams));
+            _f.Add(FuncsEnum.создатьАВдробь,    new GenExprFrac (s.Elems,   UseMultipleReturningParams));
         }       
 
         // вызов необходимых функций
